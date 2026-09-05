@@ -546,7 +546,7 @@ export function apply(ctx: Context, config: Config): void {
 /** Normalize a problem detail result into the model-facing problem view. */
 function problemView(detail: LuoguProblemDetailResult): Omit<ProblemView, 'fromCache'> {
   const p = detail.problem
-  if (p === undefined || p === null) {
+  if (p === undefined) {
     throw new Error('luogu_problem: the problem was not found (it may be restricted or require a login cookie)')
   }
   return {

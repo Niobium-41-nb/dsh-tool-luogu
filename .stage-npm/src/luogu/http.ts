@@ -34,7 +34,6 @@ export type LuoguErrorCode =
   | 'LUOGU_ERROR'
   | 'UNAUTHENTICATED'
   | 'CSRF_UNAVAILABLE'
-  | 'NOT_FOUND'
 
 /** The network / policy failure reported by the tools. */
 export class LuoguError extends Error {

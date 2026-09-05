@@ -48,9 +48,9 @@ export function parseCookieHeader(cookie: string | undefined): Record<string, st
 
 /** Build a credential from config/env values, deriving missing pieces. */
 export function buildCredential(input: {
-  cookie?: string
-  uid?: string
-  clientId?: string
+  cookie?: string | undefined
+  uid?: string | undefined
+  clientId?: string | undefined
 }): LuoguCredential {
   const rawPairs = parseCookieHeader(input.cookie)
   // Fields may come from either the explicit header cookie or dedicated fields.
@@ -141,7 +141,7 @@ export function isAuthenticated(credential: LuoguCredential): boolean {
 }
 
 /** Build the error a tool raises when an authenticated action has no session. */
-export function requireAuthenticated(credential: LuoguCredential, action: string): never {
+export function requireAuthenticated(action: string): never {
   throw new LuoguError(
     'UNAUTHENTICATED',
     `${action} requires a Luogu login. Configure your Luogu cookie under the "luogu" `

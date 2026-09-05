@@ -27,6 +27,7 @@ import type {
   LuoguRecordDetail,
   LuoguRecordListResult,
   LuoguSubmitResult,
+  LuoguSubtask,
 } from '../luogu-types.ts'
 
 export interface LuoguClientOptions {
@@ -175,23 +176,23 @@ export class LuoguClient {
 }
 
 export interface ListProblemsParams {
-  page?: number
+  page?: number | undefined
   /** Keyword searched against problem titles/ids (content search optional). */
-  keyword?: string
+  keyword?: string | undefined
   /** Source prefix: P / CF / SP / AT / UVA / B / … */
-  type?: string
+  type?: string | undefined
   /** Difficulty scale 0..8. */
-  difficulty?: number
+  difficulty?: number | undefined
   /** Comma-separated tag ids. */
-  tag?: string
-  orderBy?: string
-  order?: string
+  tag?: string | undefined
+  orderBy?: string | undefined
+  order?: string | undefined
 }
 
 export interface RecordListParams {
-  uid?: string
-  page?: number
-  status?: number
+  uid?: string | undefined
+  page?: number | undefined
+  status?: number | undefined
 }
 
 /** Random id helpers shared by tools. */
@@ -199,7 +200,7 @@ export interface RecordListParams {
 /** Pick a uniformly random problem from a filtered pool. */
 export async function randomProblem(
   client: LuoguClient,
-  filter: { type?: string; difficulty?: number; keyword?: string; tag?: string },
+  filter: { type?: string | undefined; difficulty?: number | undefined; keyword?: string | undefined; tag?: string | undefined },
 ): Promise<{ pid: string; name: string; type: string; difficulty: number | null; index: number; count: number }> {
   // Ask for a large page to estimate the count, then sample one item.
   const first = await client.listProblems({ ...filter, page: 1 })
@@ -480,7 +481,7 @@ function decodeCompileResult(record: UnknownRecord): LuoguRecordDetail['compileR
   }
 }
 
-function decodeSubtasks(subtask: unknown): LuoguRecordDetail['testCaseGroup'] {
+function decodeSubtasks(subtask: unknown): LuoguSubtask[] {
   if (!isRecord(subtask)) return []
   const testsRaw = subtask['testCases']
   if (!Array.isArray(testsRaw)) return []

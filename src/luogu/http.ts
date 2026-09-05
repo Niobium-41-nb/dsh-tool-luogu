@@ -40,7 +40,11 @@ export type LuoguErrorCode =
 export class LuoguError extends Error {
   override readonly name = 'LuoguError'
   readonly code: LuoguErrorCode
-  constructor(code: LuoguErrorCode, message: string, options?: { cause?: unknown; remote?: string }) {
+  constructor(
+    code: LuoguErrorCode,
+    message: string,
+    options?: { cause?: unknown; remote?: string | undefined },
+  ) {
     super(message, options)
     this.code = code
     if (options?.remote !== undefined) this.remote = options.remote
@@ -152,7 +156,7 @@ function isUnlogin(message: string): boolean {
  * once from `/ranking` and reuses it; callers cache and refresh on failure.
  */
 export async function fetchCsrfToken(
-  options: { cookie?: string; userAgent?: string; origin?: string; signal?: AbortSignal } = {},
+  options: { cookie?: string | undefined; userAgent?: string | undefined; origin?: string | undefined; signal?: AbortSignal | undefined } = {},
 ): Promise<string> {
   const origin = originOf(options.origin)
   const headers: Record<string, string> = {

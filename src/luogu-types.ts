@@ -100,12 +100,12 @@ export interface LuoguProblemDetails {
   title: string
   difficulty: number | null
   /** Provider user id. */
-  provider?: number
+  provider?: number | undefined
   content: LuoguProblemContent
   samples: LuoguSample[]
-  limits?: LuoguProblemLimits
+  limits?: LuoguProblemLimits | undefined
   /** Submitted code languages accepted for this problem. */
-  acceptLanguages?: number[]
+  acceptLanguages?: number[] | undefined
 }
 
 /** Single problem detail payload normalized by the parser. */
@@ -121,12 +121,12 @@ export interface LuoguRecordRow {
   problem: { pid: string; title: string; difficulty: number | null }
   user: { uid: number; name: string }
   status: number
-  score?: number
-  memory?: number
-  time?: number
+  score?: number | undefined
+  memory?: number | undefined
+  time?: number | undefined
   language: number
   submitTime: number
-  sourceCodeLength?: number
+  sourceCodeLength?: number | undefined
   enableO2: boolean
 }
 
@@ -144,24 +144,24 @@ export interface LuoguTestCase {
   time: number
   memory: number
   score: number
-  signal?: number
-  inputFile?: string
-  outputFile?: string
-  subtaskId?: number
+  signal?: number | undefined
+  inputFile?: string | undefined
+  outputFile?: string | undefined
+  subtaskId?: number | undefined
 }
 
 /** One subtask group of the judgement detail. */
 export interface LuoguSubtask {
   id: number
-  score?: number
-  status?: number
+  score?: number | undefined
+  status?: number | undefined
   testCases: LuoguTestCase[]
 }
 
 /** Compile-output detail of a single record. */
 export interface LuoguCompileResult {
-  success?: boolean
-  message?: string
+  success?: boolean | undefined
+  message?: string | undefined
 }
 
 /** Full single-record payload normalized by the parser. */
@@ -170,17 +170,17 @@ export interface LuoguRecordDetail {
   problem: { pid: string; title: string }
   user: { uid: number; name: string }
   status: number
-  score?: number
-  memory?: number
-  time?: number
+  score?: number | undefined
+  memory?: number | undefined
+  time?: number | undefined
   language: number
   submitTime: number
   enableO2: boolean
-  sourceCode?: string
-  compileResult?: LuoguCompileResult
-  testCaseGroup?: LuoguSubtask[]
+  sourceCode?: string | undefined
+  compileResult?: LuoguCompileResult | undefined
+  testCaseGroup?: LuoguSubtask[] | undefined
   /** Raw detail object kept for lossless passthrough when the parser is unsure. */
-  raw?: Record<string, unknown>
+  raw?: Record<string, unknown> | undefined
 }
 
 /** Result of a submit call: the created record id. */

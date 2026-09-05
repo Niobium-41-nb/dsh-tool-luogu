@@ -1,0 +1,19 @@
+# 例：把洛谷登录 Cookie 配置进 harness 的 settings 文档
+# （DSH settings-file 机制，或相应 harness 的用户配置入口）。
+#
+# 获取方式：浏览器登录 https://www.luogu.com.cn 后，从任意请求的 Cookie 头复制该串。
+# 本插件不做登录/登出，只读取这里的凭据；未配置时仅公开浏览/读题可用。
+
+luogu:
+  # 完整 Cookie 串（secret）。两种常见字段 __client_id 与 _uid 都会被识别。
+  cookie: "__client_id=abcdef1234567890; _uid=12345678; uid=12345678; cliend_id=abcdef1234567890"
+  # 可选：不写 cookie 时也可只给 uid + clientId，插件按 _uid/__client_id 拼装。
+  # uid: "12345678"
+  # clientId: "abcdef1234567890"
+  # 可选：请求 User-Agent。
+  userAgent: "dsh-luogu"
+  # 可选：站点源（默认 https://www.luogu.com.cn）。
+  # origin: "https://www.luogu.com.cn"
+  # 离线题目缓存开关与目录。
+  cacheEnabled: true
+  # cacheDir: "C:/Users/<you>/AppData/Local/dsh-luogu/cache"

@@ -1,7 +1,7 @@
 {
   "name": "@dsh-luogu/dsh-tool-luogu",
   "description": "模型可调用的洛谷(Luogu)刷题工具集：题库/题目/提交/评测/随机跳题；登录凭据由用户配置，无注销功能",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "license": "MIT",
   "private": true,
   "type": "module",

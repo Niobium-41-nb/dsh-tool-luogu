@@ -285,7 +285,13 @@ function containerWith(payload: unknown, key: string): UnknownRecord | undefined
 function decodeProblemList(payload: unknown): LuoguProblemListResult {
   const problemsSection = containerWith(payload, 'problems') ?? undefined
   const problems = problemsSection === undefined ? undefined : problemsSection['problems']
-  const list = Array.isArray(problems) ? problems : undefined
+  let list: unknown
+  if (Array.isArray(problems)) {
+    list = problems
+  } else if (isRecord(problems) && Array.isArray(problems['result'])) {
+    // Lentille list shape: data.problems = { count, perPage, result: [...] }
+    list = problems['result']
+  }
   if (!Array.isArray(list)) {
     throw new LuoguError('BAD_PAYLOAD', 'problem list response lacked a problems array')
   }
@@ -308,8 +314,8 @@ function decodeProblemList(payload: unknown): LuoguProblemListResult {
         flag: asNumber(row['flag']) ?? 0,
       }]
     }),
-    count: asNumber(problemsSection?.['count']) ?? list.length,
-    perPage: asNumber(problemsSection?.['perPage']) ?? list.length,
+    count: asNumber((isRecord(problems) ? problems : problemsSection)?.['count']) ?? list.length,
+    perPage: asNumber((isRecord(problems) ? problems : problemsSection)?.['perPage']) ?? list.length,
   }
   return result
 }
@@ -339,7 +345,8 @@ function decodeProblemDetail(payload: unknown): LuoguProblemDetailResult {
     return { problem: null, bookmarked: false }
   }
   const pid = asString(problem['pid']) ?? ''
-  const title = asString(problem['title']) ?? ''
+  // Lentille names the problem title field `name` (legacy used `title`).
+  const title = asString(problem['title']) ?? asString(problem['name']) ?? ''
   if (pid.length === 0 && title.length === 0) {
     return { problem: null, bookmarked: asBoolean(problemData['bookmarked']) }
   }

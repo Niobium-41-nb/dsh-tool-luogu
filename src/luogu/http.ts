@@ -15,6 +15,33 @@
 
 import { CONTENT_ONLY_QUERY, CSRF_TOKEN_REGEX, ENDPOINTS, LUOGU_ORIGIN } from './constants.ts'
 
+/**
+ * Luogu currently renders every site URL as a server-side "Lentille" HTML page
+ * and embeds the JSON payload in a `<script id="lentille-context">` element.
+ * There is no longer a bare-JSON response mode, so requests must fall back to
+ * extracting that embedded script when the body is HTML.
+ */
+const LENTILLE_SCRIPT_REGEX =
+  /<script[^>]*id=["']lentille-context["'][^>]*type=["']application\/json["'][^>]*>([\s\S]*?)<\/script>/i
+
+/**
+ * Extract the JSON payload Luogu embeds in a Lentille SSR page. Returns
+ * `undefined` when the page carries no such script.
+ */
+export function extractLentilleJson(html: string): unknown {
+  const match = LENTILLE_SCRIPT_REGEX.exec(html)
+  if (match === null) return undefined
+  // Indexed access is `string | undefined` under the current lib types: a
+  // capture group can be absent even when the overall match succeeded.
+  const payload = match[1]
+  if (payload === undefined) return undefined
+  try {
+    return JSON.parse(payload)
+  } catch {
+    return undefined
+  }
+}
+
 /** Loose JSON object type. */
 export type UnknownRecord = Record<string, unknown>
 
@@ -127,10 +154,15 @@ export async function requestJson(
   try {
     parsed = text.length === 0 ? null : JSON.parse(text)
   } catch {
-    if (!response.ok) {
-      throw new LuoguError('HTTP', `Luogu request failed: HTTP ${response.status}`)
+    // Luogu's current SSR serves HTML with the payload inside the
+    // lentille-context script, not a bare JSON body. Fall back to that.
+    parsed = extractLentilleJson(text)
+    if (parsed === undefined) {
+      if (!response.ok) {
+        throw new LuoguError('HTTP', `Luogu request failed: HTTP ${response.status}`)
+      }
+      throw new LuoguError('BAD_PAYLOAD', `Luogu returned non-JSON (HTTP ${response.status})`)
     }
-    throw new LuoguError('BAD_PAYLOAD', `Luogu returned non-JSON (HTTP ${response.status})`)
   }
 
   const remote = parsed !== undefined ? extractErrorMessage(parsed) : undefined

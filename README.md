@@ -1,5 +1,7 @@
 # dsh-tool-luogu — DSH（DeepSeek Harness / Cordis）洛谷刷题工具插件
 
+[![license](https://img.shields.io/github/license/Niobium-41-nb/dsh-tool-luogu)](https://github.com/Niobium-41-nb/dsh-tool-luogu/blob/master/LICENSE)
+
 让 DeepSeek Harness 的 Agent 具备在 [洛谷 Luogu](https://www.luogu.com.cn) 刷题的能力，以**模型可调用工具**
 的形式暴露给 Agent。功能对齐 [vscode-luogu（github.com/yltx/vscode-luogu）](https://github.com/yltx/vscode-luogu)
 的核心刷题闭环，但按你的要求做了两处刻意差异：
@@ -52,7 +54,7 @@
 
 ## 状态与诚实说明
 
-- **GitHub**：源码在公开仓库
+- **GitHub**：源码在公开仓库（**没有 CI**：它的 `workspace:^` 依赖只有在 harness 仓库内部才装得上，见下文）
   [`github.com/Niobium-41-nb/dsh-tool-luogu`](https://github.com/Niobium-41-nb/dsh-tool-luogu)
   （2026-09-14 由私有转为公开，MIT）。
 - **npm**：**不发布到 npm**，有意如此，但理由已经换了：

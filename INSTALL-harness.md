@@ -18,7 +18,7 @@
 | profile 依赖清单 | `<DSH_HOME>\profiles\web\package.json` + `pnpm-workspace.yaml` |
 | 用户设置文档（cookie 放这里） | `<DSH_HOME>\settings.yaml`（按 namespace 分节） |
 
-插件源码 / 私有仓库：`https://github.com/Niobium-41-nb/dsh-tool-luogu`
+插件源码 / 公开仓库：`https://github.com/Niobium-41-nb/dsh-tool-luogu`
 
 ---
 
@@ -40,9 +40,13 @@ dsh 不是靠把源码硬塞进官方 `packages/` 来装插件，而是**运行�
 
 ---
 
-## 2. npm 发布（前置，可选但推荐）
+## 2. npm 发布（**当前不走这条路**，见 README「状态与诚实说明」）
 
-仓库目前 `npm whoami` 返回 401（未登录）。需要你先在自己环境登录：
+本插件的 manifest 没有 `dsh` 字段，发到 npm 也只能手动 insert 挂载；因此当前决定是
+**GitHub-only**（`.stage-npm/` 保留为"依赖已改写、随时可发"的现成 manifest）。
+真要发布时，先补 `dsh.bundle.patch` 并删掉 profile 里手写的 insert，再照下面做。
+
+需要你先在自己环境登录：
 
 ```bash
 npm login          # 在你自己终端里完成

@@ -52,16 +52,23 @@
 
 ## 状态与诚实说明
 
-- **GitHub**：源码已推送至私有仓库
-  [`github.com/Niobium-41-nb/dsh-tool-luogu`](https://github.com/Niobium-41-nb/dsh-tool-luogu)。
-- **npm**：按用户决定**不发布到 npm**。原因：本插件是 harness 内部型 workspace 插件，代码按
-  harness 的 `@deepseek-ai/*` API（`0.1.2-alpha.5`）编写；公开 registry 仅提供这些依赖的
-  `0.0.1-rc.1`，类型面不同（如缺少 `settings.installSection`），独立发布将无法通过 typecheck，
-  会交付损坏代码。故以 GitHub 源码 + 安装文档收尾。
-- **类型健全性**：源码已通过基于 harness `exactOptionalPropertyTypes`/`noUnusedLocals` 的
-  语义 typecheck 修正（去除了重复函数、错误导入、null 收窄、可选字段等 genuine bug）。但**未在
-  harness 内实跑 `pnpm run typecheck/build`**（你选择了“只出文档、不碰代码树”）；首次真正装配时
-  应以仓库标准流程复验。
+- **GitHub**：源码在公开仓库
+  [`github.com/Niobium-41-nb/dsh-tool-luogu`](https://github.com/Niobium-41-nb/dsh-tool-luogu)
+  （2026-09-14 由私有转为公开，MIT）。
+- **npm**：**不发布到 npm**，有意如此，但理由已经换了：
+  - 旧理由（已作废）：源码用 `workspace:^` 指向 harness 内部包，公开 registry 上没有这些版本。
+    **这条已经解决** —— 本仓库的 `.stage-npm/` 就是把依赖改写成真实 semver 后的可发布 manifest；
+    已在本机验证：在干净的临时目录里按公开 registry 的版本装齐 peer 依赖后，
+    `import('…/.stage-npm/lib/index.js')` 正常导出 `name/inject/Config/apply`（`inject: ['tools']`）。
+  - **现存的真实理由**：manifest **没有 `dsh` 字段**，所以 `dsh plugin add` 不会自动挂载它 ——
+    装到 npm 上，使用者拿到的会是一个"没有任何东西会加载"的包，必须自己照
+    [`INSTALL-harness.md`](INSTALL-harness.md) 往 profile 的 `cordis.patch.yml` 里手写 insert。
+    真要发 npm，应该先补 `dsh.bundle.patch`（照同工作区的 `dsh-ping`/`dsh-restart` 的样子），
+    **并且同时把 profile 里手写的那行 insert 删掉** —— 否则同一个行 id 会被挂载两次，可能直接
+    让整棵树 fatal。本机那个 web profile 正装着它，所以这件事要单独一轮做，别顺手改。
+  - 另外 `@dsh-luogu` 这个 scope 在 npm 上没有对应的账号/组织，只能改用账号 scope 别名
+    （`@vanadium-23/dsh-tool-luogu`）；而 `npm publish` **只认 manifest 里的 `name`**。
+    （最后一步永远需要人在真终端里过一次浏览器 2FA，见工作区 `../AGENTS.md` 硬规则 22。）
 
 > ⚠️ 洛谷接口为其私有接口，可能变动/有限流；端点与字段集中到 `constants.ts`/`api.ts`，便于随上游维护。
 > 请以合理频率使用。

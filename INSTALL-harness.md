@@ -1,12 +1,12 @@
 # 在你的 deepseek-harness 中安装 dsh-tool-luogu
 
-本文件是针对**你这台机器/这个 harness 部署**的精确安装指南（只读文档，未改动任何代码树）。
+本文件是针对**用户级 profile 装配**的安装指南（只读文档，未改动任何代码树）。
 所有操作都发生在**用户级 profile**（`<DSH_HOME>\profiles\web`）里，**不触碰**
 `<HARNESS>` 官方 monorepo 的 `packages/*` 树。
 
 ---
 
-## 0. 你的环境（本指南据此编写）
+## 0. 需要知道的几个位置（把下面的占位符换成你自己的路径）
 
 | 项 | 值 |
 |---|---|
@@ -65,7 +65,7 @@ npm login          # 在你自己终端里完成
 在 profile 目录里把它加为依赖并链接进 profile 的 node_modules：
 
 ```powershell
-Set-Location <DSH_HOME>\profiles\web
+Set-Location "$env:DSH_HOME\profiles\web"
 pnpm add @dsh-luogu/dsh-tool-luogu
 ```
 
@@ -81,8 +81,8 @@ pnpm add @dsh-luogu/dsh-tool-luogu
 ### 方式 B：尚未发布时，用本地路径链接
 
 ```powershell
-Set-Location <DSH_HOME>\profiles\web
-pnpm add file:E:\dsh-luogu   # 指向本仓库根（插件即仓库根）
+Set-Location "$env:DSH_HOME\profiles\web"
+pnpm add file:<本仓库的绝对路径>   # 指向本仓库根（插件即仓库根）
 ```
 
 再把上面那段 insert 加进 `cordis.patch.yml`。
